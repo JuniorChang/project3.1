@@ -26,7 +26,7 @@ var bootstrapField = function (name, object) {
 
 
 
-const createProductForm = () => {
+const createProductForm = (countries) => {
     return forms.create({
         'name': fields.string({
             required: true,
@@ -50,6 +50,16 @@ const createProductForm = () => {
                 label: ['form-label']
             }
         }),
+        "country_id": fields.string({
+            label: 'Country',
+            required: true,
+            errorAfterField: true,
+            cssClasses:{
+                label:['form-label']
+            },
+            widget: widgets.select(),
+            choices: countries
+        })
     })
 };
 

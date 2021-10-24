@@ -3,7 +3,8 @@ const router = express.Router();
 
 // #1 import in the Product model
 const {
-    Product
+    Product,
+    Country
 } = require('../models')
 
 // import in the Forms
@@ -14,7 +15,9 @@ const {
 
 router.get('/', async (req, res) => {
     // #2 - fetch all the products (ie, SELECT * from products)
-    let products = await Product.collection().fetch();
+    let products = await Product.collection().fetch({
+        withRelated: ['country']
+    });
     res.render("products/index", {
         products: products.toJSON() // #3 - convert collection to JSON
     });
@@ -29,7 +32,8 @@ router.get('/create', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-    const productForm = createProductForm();
+
+    const productForm = createProductForm(allCountries);
     productForm.handle(req, {
         'success': async (form) => {
             const product = new Product();
@@ -58,12 +62,17 @@ router.get('/:product_id/update', async (req, res) => {
         require: true
     });
 
-    const productForm = createProductForm();
+    // fetch all the categories
+    const allCountries = await Country.fetchAll().map((country) => {
+        return [country.get('id'), country.get('name')];
+    })
+    const productForm = createProductForm(allCountries);
 
     // fill in the existing values
     productForm.fields.name.value = product.get('name');
     productForm.fields.cost.value = product.get('cost');
     productForm.fields.description.value = product.get('description');
+    productForm.fields.country_id.value = product.get('country_id');
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
@@ -74,29 +83,31 @@ router.get('/:product_id/update', async (req, res) => {
 
 router.post('/:product_id/update', async (req, res) => {
 
+    // fetch all the categories
+    const allCountries = await Country.fetchAll().map((country) => {
+        return [country.get('id'), country.get('name')];
+    })
     // fetch the product that we want to update
     const product = await Product.where({
         'id': req.params.product_id
     }).fetch({
-        require: true
+        required: true
     });
 
     // process the form
-    const productForm = createProductForm();
+    const productForm = createProductForm(allCountries);
     productForm.handle(req, {
-        success: async (form) => {
+        'success': async (form) => {
             product.set(form.data);
             product.save();
             res.redirect('/products');
         },
-        error: async (form) => {
-            res.render("products/update", {
-                form: form.toHTML(bootstrapField),
-                product: product.toJSON()
+        'error': async (form) => {
+            res.render('products/update', {
+                'form': form.toHTML(bootstrapField)
             })
         }
-    })
-
+    });
 });
 
 router.get('/:product_id/delete', async (req, res) => {
