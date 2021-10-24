@@ -1,6 +1,6 @@
 const bookshelf = require('../bookshelf')
 
-const Product = bookshelf.model('product', {
+const Product = bookshelf.model('coffeeData', {
     tableName:'coffeeData'
 });
 
