@@ -41,8 +41,8 @@ router.post('/create', async (req, res) => {
             product.set('cost', form.data.cost);
             product.set('description', form.data.description);
             await product.save();
+            req.flash("success_messages", `New Product ${product.get('name')} has been created`);
             res.redirect('/products');
-
         },
         'error': async (form) => {
             res.render('products/create', {
@@ -100,6 +100,7 @@ router.post('/:product_id/update', async (req, res) => {
         'success': async (form) => {
             product.set(form.data);
             product.save();
+            req.flash("success_messages", `${product.get('name')} has been updated`);
             res.redirect('/products');
         },
         'error': async (form) => {

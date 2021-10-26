@@ -6,7 +6,9 @@ const validators = forms.validators;
 const widgets = forms.widgets;
 
 var bootstrapField = function (name, object) {
-    if (!Array.isArray(object.widget.classes)) { object.widget.classes = []; }
+    if (!Array.isArray(object.widget.classes)) {
+        object.widget.classes = [];
+    }
 
     if (object.widget.classes.indexOf('form-control') === -1) {
         object.widget.classes.push('form-control');
@@ -42,7 +44,7 @@ const createProductForm = (countries) => {
             cssClasses: {
                 label: ['form-label']
             },
-            'validators':[validators.integer()]
+            'validators': [validators.integer()]
         }),
         'description': fields.string({
             required: true,
@@ -55,8 +57,8 @@ const createProductForm = (countries) => {
             label: 'Country',
             required: true,
             errorAfterField: true,
-            cssClasses:{
-                label:['form-label']
+            cssClasses: {
+                label: ['form-label']
             },
             widget: widgets.select(),
             choices: countries
@@ -64,5 +66,62 @@ const createProductForm = (countries) => {
     })
 };
 
+const createRegistrationForm = () => {
+    return forms.create({
+        'username': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'email': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'password': fields.password({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'confirm_password': fields.password({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            },
+            validators: [validators.matchField('password')]
+        })
+    })
+};
 
-module.exports = {createProductForm, bootstrapField};
+const createLoginForm = () => {
+    return forms.create({
+        'email': fields.string({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+        'password': fields.password({
+            required: true,
+            errorAfterField: true,
+            cssClasses: {
+                label: ['form-label']
+            }
+        }),
+    })
+};
+
+module.exports = {
+    createProductForm,
+    createRegistrationForm,
+    createLoginForm,
+    bootstrapField
+};

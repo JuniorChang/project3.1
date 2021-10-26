@@ -14,4 +14,8 @@ const Country = bookshelf.model('Country',{
     }
 });
 
-module.exports = { Product, Country };
+const User = bookshelf.model('User', {
+    tableName: 'users'
+});
+
+module.exports = { Product, Country, User };

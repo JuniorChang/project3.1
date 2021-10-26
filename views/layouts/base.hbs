@@ -14,7 +14,44 @@
 </head>
 
 <body>
-    <div class="container">
+    <div>
+        <ul class="nav justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Active</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        {{#if success_messages }}
+        {{#each success_messages}}
+        <div class="alert alert-success">
+            {{this}}
+        </div>
+        {{/each}}
+        {{/if}}
+
+        {{#if error_messages}}
+        {{#each error_messages}}
+        <div class="alert alert-danger">
+            {{this}}
+        </div>
+        {{/each}}
+
+        {{/if}}
+    </div>
+    <div class="container" style="margin-top: 25px;">
+
+
         {{#block 'content'}}{{/block}}
     </div>
     <!-- Optional JavaScript -->
