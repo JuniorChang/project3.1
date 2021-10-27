@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const {checkIfAuthenticated} = require('../middlewares/index');
 
 // #1 import in the Product model
 const {
@@ -24,14 +25,17 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/create', async (req, res) => {
-    const productForm = createProductForm();
+router.get('/create', checkIfAuthenticated, async (req, res) => {
+    const allCountries = await await Country.fetchAll().map((country)=>{
+        return [country.get('id'), country.get('name')];
+    })
+    const productForm = createProductForm(allCountries);
     res.render('products/create', {
         'form': productForm.toHTML(bootstrapField)
     })
 });
 
-router.post('/create', async (req, res) => {
+router.post('/create', checkIfAuthenticated, async (req, res) => {
 
     const productForm = createProductForm(allCountries);
     productForm.handle(req, {

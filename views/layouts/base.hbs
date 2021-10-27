@@ -10,27 +10,40 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+        <link rel="stylesheet" type="css" href="../../public/css/base.css">
+
     <title>Hello, world!</title>
 </head>
 
 <body>
+
     <div>
-        <ul class="nav justify-content-center">
+        {{#if user}}
+        Hello, {{user.username}}
+        <a href="/users/logout" class="ml-3 btn btn-primary btn-sm"> Logout</a>
+        {{else}}
+        Hello Guest
+        <a href="/users/register" class="ml-3 btn btn-primary btn-sm">Register</a>
+        {{/if}}
+    </div>
+
+    <div>
+        <ul class="nav nav_links ">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Active</a>
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="/products">Products</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="/users/register">Register</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link disabled">Disabled</a>
+            <li class="nav-item" style="float:right">
+                <a class="nav-link" href="/users/login" > Log In</a>
             </li>
         </ul>
     </div>
-
+    
     <div>
         {{#if success_messages }}
         {{#each success_messages}}
