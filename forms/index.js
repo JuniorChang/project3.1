@@ -62,6 +62,9 @@ const createProductForm = (countries) => {
             },
             widget: widgets.select(),
             choices: countries
+        }),
+        'image_url': fields.string({
+            widget : widgets.hidden()
         })
     })
 };
