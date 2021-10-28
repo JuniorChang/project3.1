@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
 
 
 router.get('/create', checkIfAuthenticated, async (req, res) => {
-    const allCountries = await await Country.fetchAll().map((country)=>{
+    const allCountries = await Country.fetchAll().map((country)=>{
         return [country.get('id'), country.get('name')];
     })
     const productForm = createProductForm(allCountries);
@@ -40,7 +40,9 @@ router.get('/create', checkIfAuthenticated, async (req, res) => {
 });
 
 router.post('/create', checkIfAuthenticated, async (req, res) => {
-
+    const allCountries = await Country.fetchAll().map((country_id)=>{
+        return [country_id.get('id'), country_id.get('name')];
+    })
     const productForm = createProductForm(allCountries);
     productForm.handle(req, {
         'success': async (form) => {
@@ -48,6 +50,7 @@ router.post('/create', checkIfAuthenticated, async (req, res) => {
             product.set('name', form.data.name);
             product.set('cost', form.data.cost);
             product.set('description', form.data.description);
+            product.set('country_id', form.data.country_id);
             await product.save();
             req.flash("success_messages", `New Product ${product.get('name')} has been created`);
             res.redirect('/products');
