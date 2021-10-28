@@ -84,10 +84,14 @@ router.get('/:product_id/update', async (req, res) => {
     productForm.fields.cost.value = product.get('cost');
     productForm.fields.description.value = product.get('description');
     productForm.fields.country_id.value = product.get('country_id');
+    productForm.fields.image_url.value = productForm.get('image_url');
 
     res.render('products/update', {
         'form': productForm.toHTML(bootstrapField),
-        'product': product.toJSON()
+        'product': product.toJSON(),
+        CL_NAME: process.env.CL_NAME,
+        CL_API_KEY : process.env.CL_API_KEY,
+        CL_UPLOAD_PRESET: process.env.CL_UPLOAD_PRESET
     })
 
 });

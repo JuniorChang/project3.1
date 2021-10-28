@@ -4,7 +4,8 @@ const wax = require("wax-on");
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
-// const csrf = require('csurf');
+const csrf = require('csurf');
+const cloudinaryRoutes = require('./routes/cloudinary');
 
 require("dotenv").config();
 
@@ -60,15 +61,25 @@ async function main() {
     app.use("/", landingRoutes);
     app.use("/products", productRoutes);
     app.use("/users", userRoutes);
+    app.use("/cloudinary", cloudinaryRoutes);
 }
 
 // enable CSRF, then share CSRF with hbs files
-// app.use(csrf());
+app.use(csrf());
 
-// app.use(function(req,res,next){
-//     res.locals.csrfToken = req.csrfToken();
-//     next();
-// });
+app.use(function (err, req,res,next) {
+    if (err && err.code == "EBADCSRFTOKEN") {
+        req.flash("error_messages", "The form has expired. Please reload");
+        res.redirect('back');
+    }else {
+        next()
+    }
+});
+
+app.use(function(req,res,next){
+    res.locals.csrfToken = req.csrfToken();
+    next();
+})
 
 
 main();
