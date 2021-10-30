@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const {checkIfAuthenticated} = require('../middlewares/index');
+const {
+    checkIfAuthenticated
+} = require('../middlewares/index');
 
 // #1 import in the Product model
 const {
@@ -11,36 +13,90 @@ const {
 // import in the Forms
 const {
     bootstrapField,
-    createProductForm
+    createProductForm,
+    createSearchForm
 } = require('../forms');
 
 router.get('/', async (req, res) => {
     // #2 - fetch all the products (ie, SELECT * from products)
-    let products = await Product.collection().fetch({
-        withRelated: ['country']
-    });
-    res.render("products/index", {
-        products: products.toJSON() // #3 - convert collection to JSON
-    });
+    //     let products = await Product.collection().fetch({
+    //         withRelated: ['country']
+    //     });
+    //     res.render("products/index", {
+    //         products: products.toJSON() // #3 - convert collection to JSON
+    //     });
+    // });
+    const allCountries = await Country.fetchAll().map((country) => {
+        return [country.get('id'), country.get('name')];
+    })
+    allCountries.unshift([0, '----']);
+
+    let searchForm = createSearchForm(allCountries);
+    let q = coffeeData.collection();
+
+    searchForm.handle(req, {
+        'empty': async (form) => {
+            let products = await q.fetch({
+                withRelated: ['country']
+            })
+            res.render('products/index', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+        'error': async (form) => {
+            let products = await q.fetch({
+                withRelated: ['category']
+            })
+            res.render('products/index', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+        'success': async (form) => {
+            if (form.data.name) {
+                q = q.where('name', 'like', '%' + req.query.name + '%')
+            }
+            if (form.data.category_id && form.data.category_id != "0") {
+                q = q.query('join', 'countries')
+                    .where('countries.name', 'like', '%' + req.query.country + '%')
+            }
+            if (form.data.min_cost) {
+                q = q.where('cost', '>=', req.query.min_cost)
+            }
+
+            if (form.data.max_cost) {
+                q = q.where('cost', '<=', req.query.max_cost);
+            }
+
+            let products = await q.fetch({
+                withRelated: ['country']
+            })
+            res.render('products/index', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+    })
 });
 
 
 router.get('/create', checkIfAuthenticated, async (req, res) => {
-    const allCountries = await Country.fetchAll().map((country)=>{
+    const allCountries = await Country.fetchAll().map((country) => {
         return [country.get('id'), country.get('name')];
     })
     const productForm = createProductForm(allCountries);
     res.render('products/create', {
         'form': productForm.toHTML(bootstrapField),
-        CL_NAME : process.env.CL_NAME,
+        CL_NAME: process.env.CL_NAME,
         CL_API_KEY: process.env.CL_API_KEY,
-        CL_PRESET : process.env.CL_UPLOAD_PRESET
+        CL_PRESET: process.env.CL_UPLOAD_PRESET
     })
-    
+
 });
 
 router.post('/create', checkIfAuthenticated, async (req, res) => {
-    const allCountries = await Country.fetchAll().map((country_id)=>{
+    const allCountries = await Country.fetchAll().map((country_id) => {
         return [country_id.get('id'), country_id.get('name')];
     })
     const productForm = createProductForm(allCountries);
@@ -90,7 +146,7 @@ router.get('/:product_id/update', async (req, res) => {
         'form': productForm.toHTML(bootstrapField),
         'product': product.toJSON(),
         CL_NAME: process.env.CL_NAME,
-        CL_API_KEY : process.env.CL_API_KEY,
+        CL_API_KEY: process.env.CL_API_KEY,
         CL_UPLOAD_PRESET: process.env.CL_UPLOAD_PRESET
     })
 
