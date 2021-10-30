@@ -25,7 +25,7 @@
 {{!-- get signature --}}
 <script>
     function generateSignature(callback, params_to_sign) {
-        axios.get('/cloudinary/sign', {
+        axios.get('../routes/cloudinary/sign', {
             params: {
                 params_to_sign
             }

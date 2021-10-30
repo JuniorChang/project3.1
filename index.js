@@ -5,7 +5,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csrf = require('csurf');
-const cloudinaryRoutes = require('./routes/cloudinary');
+
 
 require("dotenv").config();
 
@@ -54,8 +54,9 @@ app.use(function(req,res,next){
 
 // import in routes
 const landingRoutes = require('./routes/landing');
-const productRoutes = require('./routes/products')
-const userRoutes = require('./routes/users')
+const productRoutes = require('./routes/products');
+const userRoutes = require('./routes/users');
+const cloudinaryRoutes = require('./routes/cloudinary');
 
 async function main() {
     app.use("/", landingRoutes);
