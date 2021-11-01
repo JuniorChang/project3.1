@@ -10,6 +10,10 @@ const {
     Country
 } = require('../models')
 
+// importing the DAL
+const dataLayer = require('../dal/products')
+
+
 // import in the Forms
 const {
     bootstrapField,
@@ -26,9 +30,7 @@ router.get('/', async (req, res) => {
     //         products: products.toJSON() // #3 - convert collection to JSON
     //     });
     // });
-    const allCountries = await Country.fetchAll().map((country) => {
-        return [country.get('id'), country.get('name')];
-    })
+    const allCountries = await dataLayer.getAllCountries();
     allCountries.unshift([0, '----']);
 
     let searchForm = createSearchForm(allCountries);
