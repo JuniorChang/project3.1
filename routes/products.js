@@ -32,7 +32,7 @@ router.get('/', async (req, res) => {
     allCountries.unshift([0, '----']);
 
     let searchForm = createSearchForm(allCountries);
-    let q = coffeeData.collection();
+    let q = Product.collection();
 
     searchForm.handle(req, {
         'empty': async (form) => {
