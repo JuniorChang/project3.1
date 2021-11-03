@@ -59,9 +59,9 @@ router.get('/', async (req, res) => {
             if (form.data.name) {
                 q = q.where('name', 'like', '%' + req.query.name + '%')
             }
-            if (form.data.category_id && form.data.category_id != "0") {
-                q = q.query('join', 'countries')
-                    .where('countries.name', 'like', '%' + req.query.country + '%')
+            if (form.data.country_id && form.data.country_id != "0") {
+                q = q.query('join', 'countries','country_id','countries.id')
+                    .where('countries.id', 'like', '%' + req.query.country_id + '%')
             }
             if (form.data.min_cost) {
                 q = q.where('cost', '>=', req.query.min_cost)

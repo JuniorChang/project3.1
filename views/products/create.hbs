@@ -25,7 +25,7 @@
 {{!-- get signature --}}
 <script>
     function generateSignature(callback, params_to_sign) {
-        axios.get('../routes/cloudinary/sign', {
+        axios.get('/cloudinary/sign', {
             params: {
                 params_to_sign
             }
@@ -37,9 +37,9 @@
 
     // create the upload widget
     var myWidget = cloudinary.createUploadWidget({
-        cloudName: '{{CL_Name}}',
-        apiKey: '{{CL_API_KEY}}',
-        uploadPreset: '{{CL_PRESET}}',
+        cloudName: 'juniorchang',
+        apiKey: '116366619528731',
+        uploadPreset: 'uploads',
         uploadSignature: generateSignature
     }, (error, result) => {
         if (!error && result && result.event === "success") {
@@ -59,6 +59,7 @@
     //add event listener to initalise the widget
     document.getElementById("upload_widget").addEventListener("click", function () {
         myWidget.open();
+        console.log(myWidget);
     }, false);
 </script>
 
