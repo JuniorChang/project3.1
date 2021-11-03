@@ -90,9 +90,9 @@ router.get('/create', checkIfAuthenticated, async (req, res) => {
     const productForm = createProductForm(allCountries);
     res.render('products/create', {
         'form': productForm.toHTML(bootstrapField),
-        CL_NAME: process.env.CL_NAME,
-        CL_API_KEY: process.env.CL_API_KEY,
-        CL_PRESET: process.env.CL_UPLOAD_PRESET
+        cloudinaryName: process.env.CLOUDINARY_NAME,
+        cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
+        cloudinaryPreset: process.env.CLOUDINARY_UPLOAD_PRESET
     })
 
 });

@@ -8,7 +8,7 @@ router.get('/sign', async(req,res)=>{
     const params_to_sign = JSON.parse(req.query.params_to_sign);
 
     // get our cloudinary api secret key from the .env 
-    const apiSecret = process.env.CL_API_SECRET_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET_KEY;
 
     // get the signature, aka CSRF
     const signature = cloudinary.utils.api_sign_request(params_to_sign, apiSecret);

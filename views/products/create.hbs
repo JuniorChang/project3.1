@@ -37,9 +37,9 @@
 
     // create the upload widget
     var myWidget = cloudinary.createUploadWidget({
-        cloudName: 'juniorchang',
-        apiKey: '116366619528731',
-        uploadPreset: 'uploads',
+        cloudName: '{{cloudinaryName}}',
+        apiKey: '{{cloudinaryApiKey}}',
+        uploadPreset: '{{cloudinaryPreset}}',
         uploadSignature: generateSignature
     }, (error, result) => {
         if (!error && result && result.event === "success") {
