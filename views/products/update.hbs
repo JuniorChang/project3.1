@@ -38,9 +38,9 @@
         })
     }
     var myWidget = cloudinary.createUploadWidget({
-        cloudName: '{{CL_Name}}',
-        apiKey: '{{CL_API_KEY}}',
-        uploadPreset: '{{CL_UPLOAD_PRESET}}',
+        cloudName: '{{cloudinaryName}}',
+        apiKey: '{{cloudinaryApiKey}}',
+        uploadPreset: '{{cloudinaryPreset}}',
         uploadSignature: generateSignature
     }, (error, result) => {
         if (!error && result && result.event === "success") {

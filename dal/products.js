@@ -8,6 +8,7 @@ const getAllCountries = async () => {
     })
 }
 
+
 const getProductById = async () => {
     return await Product.where({
         'id': parseInt(productID)
