@@ -57,16 +57,23 @@ const landingRoutes = require('./routes/landing');
 const productRoutes = require('./routes/products');
 const userRoutes = require('./routes/users');
 const cloudinaryRoutes = require('./routes/cloudinary.js');
+const cartRoutes = require('./routes/shoppingCart.js');
 
 async function main() {
     app.use("/", landingRoutes);
     app.use("/products", productRoutes);
     app.use("/users", userRoutes);
     app.use("/cloudinary", cloudinaryRoutes);
+    app.use("/cart", cartRoutes);
 }
 
 // enable CSRF, then share CSRF with hbs files
 app.use(csrf());
+
+app.use(function(req,res,next){
+    res.locals.csrfToken = req.csrfToken();
+    next();
+})
 
 app.use(function (err, req,res,next) {
     if (err && err.code == "EBADCSRFTOKEN") {
@@ -77,10 +84,7 @@ app.use(function (err, req,res,next) {
     }
 });
 
-app.use(function(req,res,next){
-    res.locals.csrfToken = req.csrfToken();
-    next();
-})
+
 
 
 main();

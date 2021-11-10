@@ -14,7 +14,7 @@ const getCart = async (userId) => {
 
 const getCartItemByUserAndProduct = async (userId, productId) => {
     return await CartItem.where({
-        'userId': userId,
+        'user_id': userId,
         'product_id': productId
     }).fetch({
         require: false
