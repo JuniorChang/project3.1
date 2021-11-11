@@ -4,8 +4,12 @@ const Product = bookshelf.model('coffeeData', {
     tableName:'coffeeData',
     country(){
         return this.belongsTo('Country');
-    }
+    },
+    
+    
 });
+
+
 
 const Country = bookshelf.model('Country',{
     tableName: 'countries',
@@ -25,4 +29,8 @@ const CartItem = bookshelf.model('CartItem', {
     }
 });
 
-module.exports = { Product, Country, User, CartItem };
+const Owner = bookshelf.model('Owner', {
+    tableName: 'owner'
+})
+
+module.exports = { Product, Country, User, CartItem, Owner };
