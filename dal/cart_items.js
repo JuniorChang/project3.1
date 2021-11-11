@@ -8,7 +8,8 @@ const getCart = async (userId) => {
             'user_id': userId
         }).fetch({
             require: false,
-            withRelated: ['product', 'product.category']
+            // is product.country correct?
+            withRelated: ['product', 'product.countries']
         });
 }
 
