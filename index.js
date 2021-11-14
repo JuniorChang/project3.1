@@ -5,14 +5,15 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csrf = require('csurf');
-
+const path = require('path');
 
 require("dotenv").config();
 
 // create an instance of express app
 let app = express();
 
-app.use(express.static(__dirname + '/public'));
+
+// app.use(express.static(publicDirectoryPath));
 
 // set the view engine
 app.set("view engine", "hbs");
@@ -59,6 +60,8 @@ const userRoutes = require('./routes/users');
 const cloudinaryRoutes = require('./routes/cloudinary.js');
 const cartRoutes = require('./routes/shoppingCart.js');
 const checkoutRoutes = require('./routes/checkout');
+const ownerRoutes = require('./routes/owner');
+const publicDirectoryPath = path.join(__dirname, '../public');
 
 async function main() {
     app.use("/", landingRoutes);
@@ -66,7 +69,8 @@ async function main() {
     app.use("/users", userRoutes);
     app.use("/cloudinary", cloudinaryRoutes);
     app.use("/cart", cartRoutes);
-    app.use('/checkout', checkoutRoutes);
+    app.use("/checkout", checkoutRoutes);
+    app.use("/owner", ownerRoutes);
 }
 
 // enable CSRF, then share CSRF with hbs files
