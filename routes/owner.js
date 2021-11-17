@@ -9,7 +9,7 @@ const getHashedPassword = (password) => {
 };
 
 const {
-    Owner, User
+    Owner
 } = require('../models');
 
 const {
@@ -48,9 +48,9 @@ router.post('/ownerRegister', (req,res) => {
 
 
 router.get('/ownerLogin', (req,res) =>{
-    const loginForm = ownerLoginForm();
+    // const loginForm = ownerLoginForm();
     res.render('owner/ownerLogin', {
-        'form': loginForm.toHTML(bootstrapField)
+        // 'form': loginForm.toHTML(bootstrapField)
     })
 });
 

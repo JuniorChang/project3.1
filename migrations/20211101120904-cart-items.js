@@ -28,7 +28,7 @@ exports.up = function(db) {
     },
     user_id:{
       type: 'int',
-      unsigned: true,
+      unsigned: false,
       notNull:true,
       foreignKey:{
         name:'cart_item_user_fk',
@@ -58,7 +58,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return null;
+  return db.dropTable('cart_items');
 };
 
 exports._meta = {

@@ -5,7 +5,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csrf = require('csurf');
-const path = require('path');
+
 
 require("dotenv").config();
 
@@ -61,7 +61,7 @@ const cloudinaryRoutes = require('./routes/cloudinary.js');
 const cartRoutes = require('./routes/shoppingCart.js');
 const checkoutRoutes = require('./routes/checkout');
 const ownerRoutes = require('./routes/owner');
-const publicDirectoryPath = path.join(__dirname, '../public');
+
 
 async function main() {
     app.use("/", landingRoutes);

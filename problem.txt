@@ -1,0 +1,8 @@
+1.
+cant migrate owner database
+
+2.
+cant reach /owner/ownerLogin
+
+3.
+cant display /cart
