@@ -13,7 +13,7 @@
       "**/CVS": true
    },
    "files.autoSave": "off",
-   "workbench.colorTheme": "Visual Studio Dark",
+   "workbench.colorTheme": "Material Theme Palenight High Contrast",
    "editor.defaultFormatter": "HookyQR.beautify",
    "[javascript]": {
       "editor.defaultFormatter": "HookyQR.beautify"

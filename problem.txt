@@ -1,8 +1,16 @@
 1.
-cant migrate owner database
+owner log in error.
+type error: cannot set property 'owner' of undefined
+routes/owner.js:81
 
 2.
-cant reach /owner/ownerLogin
+/cart having error
+(node:3405) UnhandledPromiseRejectionWarning: Error: 
+The model Product could not be resolved from the registry.
+
 
 3.
-cant display /cart
+cloudinary upload error : upload preset not found
+
+4.
+css not loading sometimes

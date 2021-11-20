@@ -5,10 +5,7 @@ const Product = bookshelf.model('coffeeData', {
     country(){
         return this.belongsTo('Country');
     },
-    
-    
 });
-
 
 
 const Country = bookshelf.model('Country',{
