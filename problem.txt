@@ -1,16 +1,11 @@
 1.
-owner log in error.
-type error: cannot set property 'owner' of undefined
-routes/owner.js:81
+cloudinary upload preset
 
 2.
-/cart having error
-(node:3405) UnhandledPromiseRejectionWarning: Error: 
-The model Product could not be resolved from the registry.
 
 
 3.
-cloudinary upload error : upload preset not found
+cant display /cart
 
 4.
-css not loading sometimes
+

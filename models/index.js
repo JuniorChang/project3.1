@@ -1,7 +1,7 @@
 const bookshelf = require('../bookshelf')
 
 const Product = bookshelf.model('coffeeData', {
-    tableName:'coffeeData',
+    tableName:'coffee_products',
     country(){
         return this.belongsTo('Country');
     },

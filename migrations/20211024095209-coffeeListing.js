@@ -15,7 +15,7 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('coffeeData',{
+  return db.createTable('coffee_products',{
     id: { type: 'int', primaryKey:true, autoIncrement:true, unsigned: true},
     name: { type: 'string', length:100, notNull:false},
     cost: 'int',
@@ -24,7 +24,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return db.dropTable('coffeeData');
+  return db.dropTable('coffee_products');
 };
 
 exports._meta = {
