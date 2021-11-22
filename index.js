@@ -6,9 +6,6 @@ const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csrf = require('csurf');
 
-
-
-
 require("dotenv").config();
 
 // create an instance of express app
@@ -70,7 +67,7 @@ async function main() {
     app.use("/products", productRoutes);
     app.use("/users", userRoutes);
     app.use("/cloudinary", cloudinaryRoutes);
-    app.use("/cart", cartRoutes);
+    app.use("/carts", cartRoutes);
     app.use("/checkout", checkoutRoutes);
     app.use("/owner", ownerRoutes);
 }

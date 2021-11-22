@@ -46,7 +46,7 @@ exports.up = function(db) {
       unsigned: true,
       foreignKey:{
         name: 'cart_item_product_fk',
-        table: 'coffeeData',
+        table: 'coffee_products',
         rules:{
           onDelte:'CASCADE',
           onUpdata: 'RESTRICT'

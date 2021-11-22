@@ -1,11 +1,11 @@
 1.
-cloudinary upload preset
+product ID
 
 2.
-
+css sometimes showing
 
 3.
-cant display /cart
+
 
 4.
 

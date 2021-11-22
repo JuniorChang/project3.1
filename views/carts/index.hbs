@@ -9,7 +9,7 @@
         <h5>Category: {{this.product.country.name}}</h5>
         <h5>Cost: {{this.product.cost}}</h5>
         <h5>Quantity: {{this.quantity}}</h5>
-        <form method="POST" action="/cart/{{this.id}}/quantity/update">
+        <form method="POST" action="/carts/{{this.id}}/quantity/update">
         <input type="hidden" value="{{../csrfToken}}" name="_csrf"/>
         <h5>
             Quantity: <input type="text" name="newQuantity" value="{{this.quantity}}" style="width: 30px;"/>
@@ -19,7 +19,7 @@
         </form>
     </li>
     <div>
-        <a href="/cart/{{this.product.id}}/remove" class="btn btn-danger">Remove</a>
+        <a href="/carts/{{this.product.id}}/remove" class="btn btn-danger">Remove</a>
     </div>
     {{/each}}
 </ul>

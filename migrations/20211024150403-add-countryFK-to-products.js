@@ -15,7 +15,7 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.addColumn('coffeeData', 'country_id', {
+  return db.addColumn('coffee_products', 'country_id', {
     type: 'int',
     unsigned: true,
     notNull: true,

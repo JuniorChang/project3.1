@@ -1,12 +1,11 @@
 const bookshelf = require('../bookshelf')
 
-const Product = bookshelf.model('coffeeData', {
+const Product = bookshelf.model('Product', {
     tableName:'coffee_products',
     country(){
         return this.belongsTo('Country');
     },
 });
-
 
 const Country = bookshelf.model('Country',{
     tableName: 'countries',
