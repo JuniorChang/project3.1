@@ -27,6 +27,10 @@ class CartServices {
     async getCart() {
         return await cartDataLayer.getCart(this.user_id);
     }
+
+    async getCartCountry() {
+        return await cartDataLayer.getCartCountry(this.user_id);
+    }
 }
 
 module.exports = CartServices;

@@ -1,24 +1,24 @@
 const express = require("express");
 const hbs = require("hbs");
 const wax = require("wax-on");
+const cors = require ('cors');
+require("dotenv").config();
+
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
-const csrf = require('csurf');
+const csurf = require('csurf');
 
-require("dotenv").config();
+
 
 // create an instance of express app
 let app = express();
-
-
-// app.use(express.static(publicDirectoryPath));
-
-// set the view engine
-app.set("view engine", "hbs");
+app.use(cors());
+// app.use(express.json());
 
 // static folder
 app.use(express.static("public"));
+// app.use(express.static(publicDirectoryPath));
 
 // setup wax-on
 wax.on(hbs.handlebars);
@@ -31,12 +31,16 @@ app.use(
     })
 );
 
+
+// set the view engine
+app.set("view engine", "hbs");
+
 // setting up sessions
 app.use(session({
-    store: new FileStore(),
-    secret: process.env.SESSION_SECRET_KEY,
-    resave: false,
-    saveUninitialized: true
+    'store': new FileStore(),
+    'secret': process.env.SESSION_SECRET_KEY,
+    'resave': false,
+    'saveUninitialized': true
 }));
 
 app.use(flash())
@@ -46,11 +50,32 @@ app.use(function (req, res, next){
     next();
 });
 
+// enable CSRF, then share CSRF with hbs files
+const csurfIntance = csurf();
+app.use(function(req,res,next){
+    console.log("chekcing for csrf exclusion")
+    if (req.url === "/checkout/process_payment"){
+        return next();
+    }
+    csurfIntance(req,res,next);
+})
+
+// global middleware
+app.use(function(req,res,next){
+    if (req.csrfToken) {
+        res.locals.csrfToken = req.csrfToken();
+    }
+    next();
+})
+
+
 // sharing user data with the hbs files
 app.use(function(req,res,next){
     res.locals.user = req.session.user;
     next();
 });
+
+app.options('*', cors())
 
 // import in routes
 const landingRoutes = require('./routes/landing');
@@ -61,6 +86,11 @@ const cartRoutes = require('./routes/shoppingCart.js');
 const checkoutRoutes = require('./routes/checkout');
 const ownerRoutes = require('./routes/owner');
 
+const api = {
+    'products': require('./routes/products'),
+    'users': require('./routes/users')
+}
+
 
 async function main() {
     app.use("/", landingRoutes);
@@ -70,15 +100,13 @@ async function main() {
     app.use("/carts", cartRoutes);
     app.use("/checkout", checkoutRoutes);
     app.use("/owner", ownerRoutes);
+
+    // app.use('./api/products', express.json(), api.products);
+    // app.use('./api/users', express.json(), api.users);
 }
 
-// enable CSRF, then share CSRF with hbs files
-app.use(csrf());
 
-app.use(function(req,res,next){
-    res.locals.csrfToken = req.csrfToken();
-    next();
-})
+
 
 app.use(function (err, req,res,next) {
     if (err && err.code == "EBADCSRFTOKEN") {
@@ -97,3 +125,4 @@ main();
 app.listen(3000, () => {
     console.log("Server has started");
 });
+

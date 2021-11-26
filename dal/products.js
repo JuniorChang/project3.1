@@ -2,22 +2,50 @@
 
 const {Product, Country} = require('../models/index');
 
-const getAllCountries = async () => {
-    return await Country.fetchAll().map((country)=>{
-        return [country.get('id'), country.get('name')];
-    })
-}
+// const getAllCountries = async () => {
+//     return await Country.fetchAll().map((country)=>{
+//         return [country.get('id'), country.get('name')];
+//     })
+// }
 
 
-const getProductById = async () => {
-    return await Product.where({
-        'id': parseInt(productID)
+// const getProductById = async () => {
+//     return await Product.where({
+//         'id': parseInt(productID)
+//     }).fetch({
+//         require: true,
+//         withRelated: ['country']
+//     });
+// }
+
+// module.exports = {
+//     getAllCountries, getProductById
+// }
+
+async function getProductbyId(productId) {
+    let product = await Product.where({
+        'id': productId
     }).fetch({
-        require: true,
-        withRelated: ['country']
-    });
+        'require': true,
+        'withRelated':['country']
+    })
+    return product;
 }
+
+async function getAllCountries() {
+    let allCountries = await Country.fetchAll().map(function (country) {
+        return [country.get('id'), country.get('name')]
+    })
+    return allCountries;
+}
+
+async function getAllProducts(){
+    return await Product.fetchAll();
+}
+
 
 module.exports = {
-    getAllCountries, getProductById
+    getProductbyId,
+    getAllCountries,
+    getAllProducts
 }

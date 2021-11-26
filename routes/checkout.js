@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const bodyParser = require('body-parser');
 
 const CartServices = require("../services/cart_services");
 const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-module.exports = router;
+
 
 
 router.get('/', async (req,res) => {
@@ -16,7 +17,7 @@ router.get('/', async (req,res) => {
     let lineItems = [];
     let meta = [];
     for (let item of items) {
-        const lineItem = {
+        let lineItem = {
             'name' : item.related('product').get('name'),
             'amount': item.related('product').get('cost'),
             'quantity': item.get('quantity'),
@@ -36,12 +37,13 @@ router.get('/', async (req,res) => {
     // creating stripe payment
     let metaData = JSON.stringify(meta);
     const payment = {
-        payment_method_types: ['card'],
-        line_items: lineItems,
-        success_url : process.env.STRIPE_SUCCESS_URL + '?sessionId={CHECKOUT_SESSION_ID}',
-        cancel_url : process.env.STRIPE_ERROR_URL,
-        metaData : {
-            'orders': metaData
+        'payment_method_types': ['card'],
+        'line_items': lineItems,
+        'success_url' : process.env.STRIPE_SUCCESS_URL,
+        'cancel_url' : process.env.STRIPE_ERROR_URL,
+        'metaData' : {
+            'orders': metaData,
+            'user_id': req.session.user.id
         }
     }
     // register the session
@@ -52,3 +54,36 @@ router.get('/', async (req,res) => {
     })
     
 })
+
+router.get('/success', function(req,res) {
+    res.render('checkout/success')
+})
+router.get('/cancelled', function(req,res) {
+    res.render('checkout/cancelled')
+})
+
+
+router.post('/process_payment', bodyParser.raw({type: 'application/json'}), async (req, res) => {
+    let payload = req.body;
+    let endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
+    let sigHeader = req.headers["stripe-signature"];
+    let event;
+    try {
+        event = Stripe.webhooks.constructEvent(payload, sigHeader, endpointSecret);
+
+    } catch (e) {
+        res.send({
+            'error': e.message
+        })
+        console.log(e.message)
+    }
+    if (event.type == 'checkout.session.completed') {
+        let stripeSession = event.data.object;
+        console.log(stripeSession);
+        // process stripeSession
+    }
+    res.send({ received: true });
+})
+
+
+module.exports = router;
