@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require('crypto');
-
+var jwt = require('jsonwebtoken');  //generate a access token so all other end points can be secure.
 const getHashedPassword = (password) => {
     const sha256 = crypto.createHash('sha256');
     const hash = sha256.update(password).digest('base64');
@@ -77,10 +77,14 @@ router.post('/login', async (req, res) => {
                 if (user.get('password') === getHashedPassword(form.data.password)) {
                     // add to the session that login succeed
                     // store the user details
+                var token = jwt.sign({ id: user.get('id') }, process.env.SECRETJWT, { expiresIn: 604800 }) //600 10 minutes
+                var refreshToken = jwt.sign({ id:user.get('id') }, process.env.SECRETJWT, { expiresIn: 60 * 60 * 24 * 30 * 12 })
                     req.session.user = {
                         id: user.get('id'),
                         username: user.get('username'),
-                        email: user.get('email')
+                        email: user.get('email'),
+                        token:token,
+                        refreshToken: refreshToken
                     }
                     req.flash("success_messages", "Welcome back, " + user.get('username'));
                     res.redirect('/users/profile');

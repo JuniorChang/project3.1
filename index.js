@@ -3,13 +3,15 @@ const hbs = require("hbs");
 const wax = require("wax-on");
 const cors = require ('cors');
 require("dotenv").config();
-
+var jwt = require('jsonwebtoken');  //generate a access token so all other end points can be secure.
 const session = require('express-session');
 const flash = require('connect-flash');
 const FileStore = require('session-file-store')(session);
 const csurf = require('csurf');
 
-
+const {
+    User
+} = require('./models');
 
 // create an instance of express app
 let app = express();
@@ -90,15 +92,37 @@ const api = {
     'products': require('./routes/products'),
     'users': require('./routes/users')
 }
+let verifyToken = async (req, res, next) => {
+    console.log(req.session)
 
+  if (typeof( req.session.user)== 'undefined' || ! req.session.user ) {
+       res.redirect('/users/login')
+  }
+  try {
+    const decoded = jwt.verify( req.session.user.token, process.env.SECRETJWT);
+
+    let user = await User.where({
+                'id': decoded.id
+            }).fetch({
+                require: false
+            });
+
+    if(!user) res.redirect('/users/login')
+    else next()
+   }
+  
+   catch (err) {
+   next();
+  }
+}
 
 async function main() {
     app.use("/", landingRoutes);
     app.use("/products", productRoutes);
     app.use("/users", userRoutes);
     app.use("/cloudinary", cloudinaryRoutes);
-    app.use("/carts", cartRoutes);
-    app.use("/checkout", checkoutRoutes);
+    app.use("/carts",verifyToken, cartRoutes);
+    app.use("/checkout",verifyToken, checkoutRoutes);
     app.use("/owner", ownerRoutes);
 
     // app.use('./api/products', express.json(), api.products);
