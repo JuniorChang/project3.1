@@ -5,6 +5,9 @@ const Product = bookshelf.model('Product', {
     country(){
         return this.belongsTo('Country');
     },
+    cost(){
+        return this.belongsTo('cart_items')
+    }
 });
 
 const Country = bookshelf.model('Country',{
@@ -29,21 +32,19 @@ const CartItem = bookshelf.model('CartItem', {
     product() {
         return this.belongsTo('Product')
     },
-    quantity() {
-        return this.belongsTo('Product')
-    },
-    tableName: 'countries',
-    country(){
-        return this.belongsTo('Country')
-    },
     
-    tableName:'coffee_products',
     name() {
         return this.belongsTo('Product')
     },
-    cost() {
+    quantity() {
         return this.belongsTo('Product')
     },
+    cost(){
+        return this.belongsTo('Product')
+    }
+    
+
+    
     
 });
 

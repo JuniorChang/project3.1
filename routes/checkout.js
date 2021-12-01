@@ -1,58 +1,64 @@
 const express = require('express');
+const CartServices = require("../services/cart_services");
 const router = express.Router();
+const Stripe = require('stripe')(process.env.STRIPE_KEY_SECRET);
 const bodyParser = require('body-parser');
 
-const CartServices = require("../services/cart_services");
-const Stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-
-
-
-router.get('/', async (req,res) => {
-    const cart = new CartServices(req.session.user.id);
-    // getting all items from cart
-    let items = await cart.getCart();
-
-    // creating line items
-    let lineItems = [];
-    let meta = [];
-    for (let item of items) {
-        let lineItem = {
-            'name' : item.related('product').get('name'),
-            'amount': item.related('product').get('cost'),
-            'quantity': item.get('quantity'),
-            'currency': "SGD"
-        }
-        if (item.related('product').get('image_url')) {
-            lineItem['images'] = [item.related('product').get('image_url')]
-        }
-        lineItem.push(lineItem);
-        // save the qty togehter with the product ID
-        meta.push({
-            'product_id':item.get('product_id'),
-            'quantity': item.get('quantity')
-        })
-    }
-
-    // creating stripe payment
-    let metaData = JSON.stringify(meta);
-    const payment = {
-        'payment_method_types': ['card'],
-        'line_items': lineItems,
-        'success_url' : process.env.STRIPE_SUCCESS_URL,
-        'cancel_url' : process.env.STRIPE_ERROR_URL,
-        'metaData' : {
-            'orders': metaData,
-            'user_id': req.session.user.id
-        }
-    }
-    // register the session
-    let stripeSession = await Stripe.checkout.session.create(payment)
-    res.render('checkout/checkout', {
-        'sessionId' : stripeSession.id,
-        'publishableKey': process.env.STRIPE_PUBLISHABLE_KEY
-    })
+router.get('/', async function (req,res) {
+    try{
+        let lineItems = [];
+        let meta = [];
     
+        let cart = new CartServices(req.session.user.id);
+        // getting all items from cart
+        let items = await cart.getCart();
+        
+        // creating line items
+        
+        for (let item of items) {
+            let lineItem = {
+                'name' : item.name,
+                'amount': item.cost,
+                'quantity': item.quantity,
+                'currency': "SGD"
+            }
+            // if (item.image_url) {
+            //     lineItem['images'] = [item.related('product').get('image_url')]
+            // }
+            lineItems.push(lineItem);
+            // save the qty togehter with the product ID
+            meta.push({
+                'product_id':item.product_id,
+                'quantity': item.quantity
+            })
+        }
+    
+        // creating stripe payment
+        let metaData = JSON.stringify(meta);
+        const payment = {
+            'payment_method_types': ['card'],
+            'line_items': lineItems,
+            'success_url' : process.env.STRIPE_SUCCESS_URL,
+            'cancel_url' : process.env.STRIPE_ERROR_URL
+            // 'metaData' : {
+            //     'orders': metaData,
+            //     'user_id': req.session.user.id
+            // }
+        }
+        // register the session
+        let stripeSession = await Stripe.checkout.sessions.create(payment)
+        res.render('checkout/checkout', {
+            'sessionId' : stripeSession.id,
+            'publishableKey': process.env.STRIPE_KEY_PUBLISHABLE
+        })
+        
+    }
+    catch(err)
+    {
+        console.log(err)
+    }
+  
 })
 
 router.get('/success', function(req,res) {

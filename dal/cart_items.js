@@ -1,7 +1,10 @@
 const {
     CartItem,
-    CartCountry
+    CartCountry,
+    Country,
 } = require('../models');
+
+const { get } = require('../routes/shoppingCart');
 
 // const getCart = async (userId) => {
 //     return await CartItem.collection()
@@ -51,14 +54,17 @@ const {
 //     return false;
 // }
 
-async function getCartItemByUserAndProduct(userId, productId) {
-    let cartItem = await CartItem.where({
-        'user_id': userId,
-        'product_id': productId
-    }).fetch({
-        'require': false
+ function getCartItemByUserAndProduct(userId, productId) {
+    return new Promise(async (resolve) => {
+        let cartItem = await CartItem.where({
+            'user_id': userId,
+            'product_id': productId
+        }).fetch({
+            'require': false
+        })
+        resolve(cartItem) ;
     })
-    return cartItem;
+   
 }
 
 async function createCartItem(userId, productId, quantity) {
@@ -72,20 +78,20 @@ async function createCartItem(userId, productId, quantity) {
     return cartItem;
 }
 
-async function getCart(userId, name, productId, quantity) {
+async function getCart(userId, name, quantity) {
     // to get more > 1 result, .collection
     // console.log(CartItem);
-    let allCartItems = await CartItem.where({
-        // 'user_id': userId,
+    let allCartItems = await CartItem.collection({
+        'user_id': userId,
         // 'name': name,
         // 'product_id': productId,
         // 'quantity': quantity,
-
-    }).fetchAll({
+    
+    }).fetch({
         'require': false,
-        withRelated: ['product', 'product.country', 'name', 'quantity']
+        withRelated: ['product', 'product.country', 'name']
     })
-    return allCartItems.serialize();
+    return allCartItems.serialize()
 }
 
 async function getCartCountry(country) {
@@ -107,7 +113,8 @@ async function removeFromCart(userId, productId) {
 }
 
 async function updateQuantity(userId, productId, newQuantity) {
-    let cartItem = await getCartItemByUserAndProduct(userId, productId);
+    
+let cartItem = await getCartItemByUserAndProduct(userId, productId);
     if (cartItem) {
         cartItem.set('quantity', newQuantity);
         cartItem.save();
@@ -115,7 +122,13 @@ async function updateQuantity(userId, productId, newQuantity) {
     }
     return false;
 }
-
+// async function getProductById( productId) {
+//     return new Promise(async (resolve) => {
+//         let products = await product.getProductbyId(productId)
+//         resolve(products) ;
+//     })
+   
+// }
 module.exports = {
     getCart,
     getCartItemByUserAndProduct,

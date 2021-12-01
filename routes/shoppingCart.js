@@ -1,7 +1,6 @@
 const express = require('express');
 const CartServices = require('../services/cart_services');
 const router = express.Router();
-
 router.get('/', async function(req,res){
     let cart = new CartServices(req.session.user.id);
     let cartContent = await cart.getCart();
@@ -19,7 +18,7 @@ router.get('/', async function(req,res){
 })
 
 router.get('/:product_id/add', async (req,res)=>{
-    let cart = new CartServices(req.session.user.id);
+     let cart = new CartServices(req.session.user.id);
     await cart.addToCart(req.params.product_id,1);
     req.flash('success_messages', 'You have added one to the cart');
     res.redirect('/carts');

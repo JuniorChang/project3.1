@@ -22,14 +22,17 @@ const {Product, Country} = require('../models/index');
 //     getAllCountries, getProductById
 // }
 
-async function getProductbyId(productId) {
-    let product = await Product.where({
-        'id': productId
-    }).fetch({
-        'require': true,
-        'withRelated':['country']
+ function getProductbyId(productId) {
+    return new Promise(async (resolve) => {
+        let product = await Product.where({
+            'id': productId
+        }).fetch({
+            'require': true,
+            'withRelated':['country']
+        })
+        resolve (product);
     })
-    return product;
+  
 }
 
 async function getAllCountries() {

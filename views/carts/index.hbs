@@ -5,13 +5,16 @@
 <a href="/checkout" class="btn btn-primary">Checkout Now </a> 
 
 <ul class="list-group">
-    {{#each shoppingCart}}
+    {{#each shoppingCart }} 
     <li class="list-group-item my-3">
+        {{#each countryCart}}
+        {{this.name}}
+        {{/each}}
+        
         <h4> {{this.name}}</h4>
-        <h5>Country: {{#each countryCart}} {{this.name}} {{/each}} </h5>
         <h5>Cost: {{this.cost}}</h5>
         <h5>Quantity: {{this.quantity}}</h5>
-        <form method="POST" action="/carts/{{this.id}}/quantity/update">
+        <form method="POST" action="/carts/{{this.product_id}}/quantity/update">
         <input type="hidden" value="{{../csrfToken}}" name="_csrf"/>
         <h5>
             Quantity: <input type="text" name="newQuantity" value="{{this.quantity}}" style="width: 30px;"/>
@@ -23,7 +26,7 @@
     <div>
         <a href="/carts/{{this.product.id}}/remove" class="btn btn-danger">Remove</a>
     </div>
-    {{/each}}
+    {{/each}} 
 </ul>
 
 
