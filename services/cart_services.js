@@ -25,15 +25,33 @@ class CartServices {
 
     async getCart() {
         let cartItems= await cartDataLayer.getCart(this.user_id);
-        for (let i =0 ; i<cartItems.length;i++)
+        let cart =[]
+        for(let k =0 ; k<cartItems.length; k++)
         {
-           
-            let produtcs=await product.getProductbyId(cartItems[i].product_id)
-            cartItems[i].name = produtcs.get('name')
-            cartItems[i].cost = produtcs.get('cost')
-            
+            if(cartItems[k].user_id == this.user_id)
+            {
+                cart.push(cartItems[k])
+            }
         }
-        return cartItems
+       
+        if(cart.length > 0)
+        {
+            for (let i =0 ; i<cart.length;i++)
+            {
+               
+                let produtcs=await product.getProductbyId(cart[i].product_id)
+                cart[i].name = produtcs.get('name')
+                cart[i].cost = produtcs.get('cost')
+                
+            }
+            return cart
+
+        }
+        else
+        {
+            return null
+        }
+        
     }
 
     async getCartCountry() {

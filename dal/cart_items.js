@@ -78,7 +78,7 @@ async function createCartItem(userId, productId, quantity) {
     return cartItem;
 }
 
-async function getCart(userId, name, quantity) {
+async function getCart(userId) {
     // to get more > 1 result, .collection
     // console.log(CartItem);
     let allCartItems = await CartItem.collection({

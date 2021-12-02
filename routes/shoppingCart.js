@@ -5,16 +5,27 @@ router.get('/', async function(req,res){
     let cart = new CartServices(req.session.user.id);
     let cartContent = await cart.getCart();
     let cartCountry = await cart.getCartCountry();
-    console.log(cartContent)
-    console.log(cartCountry)
-    // cart content map
-        // each product/user id object, you will call api for product info by product id
-        // adjust the return of object to have product infor
-    res.render('carts/index', {
-        'shoppingCart' : cartContent,
-        'countryCart' : cartCountry
-    
-    })
+    if(cart)
+    {
+      
+        // cart content map
+            // each product/user id object, you will call api for product info by product id
+            // adjust the return of object to have product infor
+        res.render('carts/index', {
+            'shoppingCart' : cartContent,
+            'countryCart' : cartCountry
+        
+        })
+    }
+    else
+    {
+        res.render('carts/index', {
+            'shoppingCart' :  null,
+            'countryCart' : null
+        
+        }) 
+    }
+   
 })
 
 router.get('/:product_id/add', async (req,res)=>{
