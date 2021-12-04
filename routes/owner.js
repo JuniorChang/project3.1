@@ -44,7 +44,7 @@ router.post('/ownerRegister', (req,res) => {
                 'email': form.data.email
             });
             await owner.save();
-            req.flash("success_messages", "Owner Account Regsitered");
+            req.flash("success_messages", "Owner Account Registered");
             res.redirect('/owner/ownerLogin')
         },
         'error': (form) =>{
@@ -72,21 +72,20 @@ router.post('/ownerLogin', async(req,res) => {
             }).fetch({
                 require:false
             });
-
             if (!owner) {
                 req.flash("error_messages", "Sorry, login details is wrong")
                 res.redirect('/owner/ownerLogin');
             } else {
                 if (owner.get('password') === getHashedPassword(form.data.password)) {
-                    res.session.owner = {
+                    req.session.owner = {
                         id: owner.get('id'),
                         username: owner.get('username'),
                         email: owner.get('email')
                     }
-                    res.flash("success_messages", "Welcome back Owner")
+                    req.flash("success_messages", "Welcome back Owner")
                     res.redirect('/owner/profile');
                 } else {
-                    res.flash("error_messages", "Sorry, login details is wrong")
+                    req.flash("error_messages", "Sorry, login details is wrong")
                     res.redirect('/owner/ownerLogin')
                 }
             }
