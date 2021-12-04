@@ -62,6 +62,17 @@ router.get('/ownerLogin', (req,res) =>{
         'form': loginForm.toHTML(bootstrapField)
     })
 });
+router.get('/profile', (req, res) => {
+    const user = req.session.owner;
+    if (!user) {
+        req.flash('error_messages', 'You do not have permission to view this page');
+        res.redirect('/users/login');
+    } else {
+        res.render('owner/ownerProfile',{
+            'user': user
+        })
+    }
+});
 router.post('/ownerLogin', async(req,res) => {
     const loginForm = ownerLoginForm();
     loginForm.handle(req, {
@@ -82,7 +93,7 @@ router.post('/ownerLogin', async(req,res) => {
                         email: owner.get('email')
                     }
                     req.flash("success_messages", "Welcome back Owner")
-                    res.redirect('/owner/ownerProfile');
+                    res.redirect('/owner/profile');
                 } else {
                     req.flash("error_messages", "Sorry, login details is wrong")
                     res.redirect('/owner/ownerLogin')
