@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {
-    checkIfAuthenticated
+    checkIfAuthenticated,
+    checkIfOwner
 } = require('../middlewares/index');
 
 // #1 import in the Product model
@@ -83,7 +84,7 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/create', checkIfAuthenticated, async (req, res) => {
+router.get('/create', checkIfOwner, async (req, res) => {
     const allCountries = await Country.fetchAll().map((country) => {
         return [country.get('id'), country.get('name')];
     })
@@ -97,7 +98,7 @@ router.get('/create', checkIfAuthenticated, async (req, res) => {
 
 });
 
-router.post('/create', checkIfAuthenticated, async (req, res) => {
+router.post('/create', checkIfOwner, async (req, res) => {
     const allCountries = await Country.fetchAll().map((country_id) => {
         return [country_id.get('id'), country_id.get('name')];
     })
