@@ -69,7 +69,7 @@ router.get('/profile', (req, res) => {
         res.redirect('/users/login');
     } else {
         res.render('owner/ownerProfile',{
-            'user': user
+            'owner': user
         })
     }
 });

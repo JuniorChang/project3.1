@@ -22,31 +22,55 @@
         {{#if user}}
         Hello, {{user.username}}
         <a href="/users/logout" class="ml-3 btn btn-primary btn-sm"> Logout</a>
+         {{/if}}
+        {{#if owner }}
+        Hello, {{owner.username}}
+        <a href="/users/logout" class="ml-3 btn btn-primary btn-sm"> Logout</a>
         {{else}}
-        Hello Guest
+        hello Guest
         <a href="/users/register" class="ml-3 btn btn-primary btn-sm">Register</a>
         {{/if}}
     </div>
+    
+    {{!-- <div>
+        {{#if owner}}
+        
+        <ul class="nav nav_links">
+            <li class="nav-items">
+                <a class="nav-link active" aria-current="page" href="/"> Home</a>
+            </li>
+        </ul>
+        {{/if}}
+    </div> --}}
 
     <div>
         <ul class="nav nav_links ">
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="/">Home</a>
             </li>
-            <li class="nav-item">
+             {{#if user}}
+              <li class="nav-item">
+                <a class="nav-link" href="/products/userProduct">Products</a>
+            </li>
+              {{else if owner }}
+               <li class="nav-item">
                 <a class="nav-link" href="/products">Products</a>
             </li>
+             {{/if}}
+           
             <li class="nav-item">
                 <a class="nav-link" href="/users/register">Register</a>
             </li>
             <li class="nav-item" style="float:right">
                 <a class="nav-link" href="/users/login"> Log In</a>
             </li>
+            {{#if user}}
             <li class="nav-item">
                 <a class="nav-link" href="/carts"> Cart
 
                 </a>
             </li>
+            {{/if}}
         </ul>
     </div>
 

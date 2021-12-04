@@ -31,6 +31,7 @@ router.get('/', async (req, res) => {
     //         products: products.toJSON() // #3 - convert collection to JSON
     //     });
     // });
+ 
     const allCountries = await dataLayer.getAllCountries();
     allCountries.unshift([0, '----']);
 
@@ -44,7 +45,8 @@ router.get('/', async (req, res) => {
             })
             res.render('products/index', {
                 'products': products.toJSON(),
-                'form': form.toHTML(bootstrapField)
+                'form': form.toHTML(bootstrapField),
+                'owner': req.session.owner
             })
         },
         'error': async (form) => {
@@ -53,7 +55,8 @@ router.get('/', async (req, res) => {
             })
             res.render('products/index', {
                 'products': products.toJSON(),
-                'form': form.toHTML(bootstrapField)
+                'form': form.toHTML(bootstrapField),
+                'owner': req.session.owner
             })
         },
         'success': async (form) => {
@@ -77,13 +80,74 @@ router.get('/', async (req, res) => {
             })
             res.render('products/index', {
                 'products': products.toJSON(),
-                'form': form.toHTML(bootstrapField)
+                'form': form.toHTML(bootstrapField),
+                'owner': req.session.owner
+
             })
         },
     })
 });
 
+router.get('/userProduct', async (req, res) => {
+    // #2 - fetch all the products (ie, SELECT * from products)
+    //     let products = await Product.collection().fetch({
+    //         withRelated: ['country']
+    //     });
+    //     res.render("products/index", {
+    //         products: products.toJSON() // #3 - convert collection to JSON
+    //     });
+    // });
+    const allCountries = await dataLayer.getAllCountries();
+    allCountries.unshift([0, '----']);
 
+    let searchForm = createSearchForm(allCountries);
+    let q = Product.collection();
+
+    searchForm.handle(req, {
+        'empty': async (form) => {
+            let products = await q.fetch({
+                withRelated: ['country']
+            })
+            res.render('products/userProductView', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+        'error': async (form) => {
+            let products = await q.fetch({
+                withRelated: ['category']
+            })
+            res.render('products/userProductView', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+        'success': async (form) => {
+            if (form.data.name) {
+                q = q.where('name', 'like', '%' + req.query.name + '%')
+            }
+            if (form.data.country_id && form.data.country_id != "0") {
+                q = q.query('join', 'countries','country_id','countries.id')
+                    .where('countries.id', 'like', '%' + req.query.country_id + '%')
+            }
+            if (form.data.min_cost) {
+                q = q.where('cost', '>=', req.query.min_cost)
+            }
+
+            if (form.data.max_cost) {
+                q = q.where('cost', '<=', req.query.max_cost);
+            }
+
+            let products = await q.fetch({
+                withRelated: ['country']
+            })
+            res.render('products/userProductView', {
+                'products': products.toJSON(),
+                'form': form.toHTML(bootstrapField)
+            })
+        },
+    })
+});
 router.get('/create', checkIfOwner, async (req, res) => {
     const allCountries = await Country.fetchAll().map((country) => {
         return [country.get('id'), country.get('name')];
