@@ -29,7 +29,7 @@ exports.up = function(db) {
       'foreignKey': {
         'name': 'cart_items_products_fk',
         'table': 'coffee_products',
-        'mapping': 'name',
+        'mapping': 'id',
         'rules':{
           'onDelete': 'CASCADE',
           'onUpdate': 'RESTRICT'
@@ -57,15 +57,7 @@ exports.up = function(db) {
     'cost':{
       'type': 'int',
       'unsigned': true,
-      'foreignKey':{
-        'name': 'cart_items_cost_fk',
-        'table':'coffee_products',
-        'mapping': 'cost',
-        'rules':{
-          'onDelete':'CASCADE',
-          'onUpdate':'RESTRICT'
-        }
-      }
+      
     }
   })
 };

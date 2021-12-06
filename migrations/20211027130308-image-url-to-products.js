@@ -15,7 +15,7 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.addColumn('coffeeData', 'image_url', {
+  return db.addColumn('coffee_products', 'image_url', {
     type:'string',
     length:255
   });
